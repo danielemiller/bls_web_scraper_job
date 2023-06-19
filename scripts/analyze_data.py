@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from zipfile import ZipFile
+import shutil
 
 def analyze_data(folder_name):
     # Create a new folder in the /analysis directory
@@ -10,7 +11,7 @@ def analyze_data(folder_name):
     with ZipFile(f"/home/astro/shared/projects/bls_scraping_data_job/data/{folder_name}/{folder_name}.zip", 'r') as zipf:
         zipf.extractall(f"/home/astro/shared/projects/bls_scraping_data_job/analysis/{folder_name}")
 
-    # Iterate over each zip file in the main zip file
+    # Iterate over each file in the main zip file
     for file in os.listdir(f"/home/astro/shared/projects/bls_scraping_data_job/analysis/{folder_name}"):
         if file.endswith(".zip"):
             # Create a new directory named after the zip file
@@ -34,3 +35,13 @@ def analyze_data(folder_name):
                     # Save the analysis results as a .txt file in the /reports directory
                     with open(f"/home/astro/shared/projects/bls_scraping_data_job/analysis/{folder_name}/{zip_file_name}/reports/{excel_file}_analysis.txt", 'w') as f:
                         f.write(str(analysis_results))
+        elif file.endswith(".xls") or file.endswith(".xlsx"):
+            # Read the Excel file into a pandas DataFrame and perform the preliminary analysis
+            df = pd.read_excel(f"/home/astro/shared/projects/bls_scraping_data_job/analysis/{folder_name}/{file}")
+
+            # Perform the preliminary analysis (replace this with your actual analysis)
+            analysis_results = df.describe()
+
+            # Save the analysis results as a .txt file in the /reports directory
+            with open(f"/home/astro/shared/projects/bls_scraping_data_job/analysis/{folder_name}/{file}_analysis.txt", 'w') as f:
+                f.write(str(analysis_results))

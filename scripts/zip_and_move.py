@@ -15,12 +15,13 @@ def zip_and_move(url):
     # Create a ZipFile object
     with ZipFile(f"/home/astro/shared/projects/bls_scraping_data_job/data/{url_name}/{folder_name}.zip", 'w') as zipf:
         # Iterate over all the files in the folder
-        for file in os.listdir(f"/home/astro/shared/projects/bls_scraping_data_job/downloads/{folder_name}"):
+        for file in os.listdir(f"/home/astro/shared/projects/bls_scraping_data_job/downloads/{url_name}"):
             # Add the file to the zip file
-            zipf.write(os.path.join("/home/astro/shared/projects/bls_scraping_data_job/downloads", folder_name, file))
+            zipf.write(os.path.join("/home/astro/shared/projects/bls_scraping_data_job/downloads", url_name, file))
 
     # Move the zip file to the "data" directory
-    shutil.move(f"/home/astro/shared/projects/bls_scraping_data_job/data/{url_name}/{folder_name}.zip", f"/home/astro/shared/projects/bls_scraping_data_job/data/{url_name}")
+    if not os.path.exists(f"/home/astro/shared/projects/bls_scraping_data_job/data/{url_name}/{folder_name}.zip"):
+        shutil.move(f"/home/astro/shared/projects/bls_scraping_data_job/data/{url_name}/{folder_name}.zip", f"/home/astro/shared/projects/bls_scraping_data_job/data/{url_name}")
 
     # Return the name of the new folder
     return url_name

@@ -43,12 +43,13 @@ try:
     # Iterate over the links
     for link in links:
         href = link.get_attribute("href")
-        logging.info("Found link: " + href)
-        # If the link href contains ".zip", click the link
-        if ".zip" in href:
-            link.click()
-            # Add a wait time between clicks to avoid overwhelming the server
-            time.sleep(2)
+        if href is not None:
+            logging.info("Found link: " + href)
+            # If the link href contains ".zip", ".xls" or ".xlsx", click the link
+            if any(ext in href for ext in [".zip", ".xls", ".xlsx"]):
+                link.click()
+                # Add a wait time between clicks to avoid overwhelming the server
+                time.sleep(2)
 
 except Exception as e:
     logging.error("Exception occurred", exc_info=True)
