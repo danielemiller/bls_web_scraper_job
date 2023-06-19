@@ -1,28 +1,18 @@
-import subprocess
 import sys
-import logging
-from datetime import datetime
+from bls_mega_web_scraper import bls_mega_web_scraper
+from zip_and_move import zip_and_move
+from analyze_data import analyze_data
 
-# Set up logging
-logging.basicConfig(filename="execute.log", level=logging.INFO, format="%(asctime)s %(message)s", datefmt="%m/%d/%Y %I:%M:%S %p")
+def execute(url):
+    # Call the bls_mega_web_scraper script to download the zip files
+    bls_mega_web_scraper(url)
 
-# Get the list of URLs from the command-line arguments
-urls = sys.argv[1:]
+    # Call the zip_and_move script to create a new folder and move the zip file into it
+    folder_name = zip_and_move(url)
 
-# Define the paths to the scripts
-web_scraper_script = "/home/astro/shared/projects/bls_web_scraper_gui/bls_scraping_data_job/scripts/bls_mega_web_scraper.py"
-zip_and_move_script = "/home/astro/shared/projects/bls_web_scraper_gui/bls_scraping_data_job/scripts/zip_and_move.py"
-data_analysis_script = "/home/astro/shared/projects/bls_web_scraper_gui/bls_scraping_data_job/scripts/analyze_data.py"
+    # Call the analyze_data script to perform the analysis
+    analyze_data(folder_name)
 
-# Iterate over the URLs
-for url in urls:
-    try:
-        # Run the web scraper script
-        subprocess.check_call(["python3", web_scraper_script, url])
-        # Run the zip and move script
-        subprocess.check_call(["python3", zip_and_move_script])
-        # Run the data analysis script
-        subprocess.check_call(["python3", data_analysis_script])
-    except subprocess.CalledProcessError as e:
-        logging.error(f"An error occurred while processing the URL {url}. Moving on to the next URL.", exc_info=True)
-        print(f"An error occurred while processing the URL {url}. Moving on to the next URL.")
+if __name__ == "__main__":
+    url = sys.argv[1]
+    execute(url)
