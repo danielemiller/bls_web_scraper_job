@@ -3,19 +3,24 @@ import shutil
 from zipfile import ZipFile
 
 def zip_and_move(url):
+    # Replace slashes in the URL with underscores
+    url_name = url.replace('/', '_')
+
     # Get the name of the most recent run folder
-    folder_name = max([d for d in os.listdir("/home/astro/Downloads") if d.startswith("run_")])
+    folder_name = max([d for d in os.listdir("/home/astro/Downloads") if d.startswith(url_name)])
 
     # Create a new folder in the /data directory based on the URL
-    new_folder_name = url.replace('/', '_')
-    os.makedirs(f"/home/astro/shared/projects/bls_scraping_data_job/data/{new_folder_name}", exist_ok=True)
+    os.makedirs(f"/home/astro/shared/projects/bls_scraping_data_job/data/{url_name}", exist_ok=True)
 
     # Create a ZipFile object
-    with ZipFile(f"/home/astro/shared/projects/bls_scraping_data_job/data/{new_folder_name}/{folder_name}.zip", 'w') as zipf:
+    with ZipFile(f"/home/astro/shared/projects/bls_scraping_data_job/data/{url_name}/{folder_name}.zip", 'w') as zipf:
         # Iterate over all the files in the folder
-        for file in os.listdir(folder_name):
+        for file in os.listdir(f"/home/astro/Downloads/{folder_name}"):
             # Add the file to the zip file
-            zipf.write(os.path.join(folder_name, file))
+            zipf.write(os.path.join("/home/astro/Downloads", folder_name, file))
+
+    # Move the zip file to the "data" directory
+    shutil.move(f"/home/astro/shared/projects/bls_scraping_data_job/data/{url_name}/{folder_name}.zip", f"/home/astro/shared/projects/bls_scraping_data_job/data/{url_name}")
 
     # Return the name of the new folder
-    return new_folder_name
+    return url_name
