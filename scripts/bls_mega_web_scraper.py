@@ -21,6 +21,16 @@ try:
     # Get the URL from the command-line arguments
     url = sys.argv[1]
 
+    # Replace slashes in the URL with underscores
+    url_name = url.replace('/', '_')
+
+    # Create a new directory in /home/astro/shared/projects/bls_scraping_data_job/downloads for this URL
+    os.makedirs(f"/home/astro/shared/projects/bls_scraping_data_job/downloads/{url_name}", exist_ok=True)
+
+    # Set the download directory for Firefox
+    firefox_options.set_preference("browser.download.dir", f"/home/astro/shared/projects/bls_scraping_data_job/downloads/{url_name}")
+    firefox_options.set_preference("browser.download.folderList", 2)
+
     # Go to the webpage
     driver.get(url)
 
