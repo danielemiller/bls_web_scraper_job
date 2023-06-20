@@ -9,20 +9,20 @@ import os
 import time
 
 # Set up logging
-logging.basicConfig(filename="oes_scraper.log", level=logging.INFO, format="%(asctime)s %(message)s", datefmt="%m/%d/%Y %I:%M:%S %p")
+logging.basicConfig(filename="/home/astro/shared/projects/bls_scraping_data_job/logs/mega_scraper.log", level=logging.INFO, format="%(asctime)s %(message)s", datefmt="%m/%d/%Y %I:%M:%S %p")
 
 # Set up Firefox options
 firefox_options = Options()
 
 try:
     # Initialize the Firefox driver
-    driver = webdriver.Firefox(options=firefox_options)
+    driver = webdriver.Firefox(options=firefox_options, service_log_path="/home/astro/shared/projects/bls_scraping_data_job/logs/geckodriver.log")
 
     # Get the URL from the command-line arguments
     url = sys.argv[1]
 
     # Replace slashes in the URL with underscores
-    url_name = url.replace('/', '_')
+    url_name = url.replace("/", "_")
 
     # Create a new directory in /home/astro/shared/projects/bls_scraping_data_job/downloads for this URL
     os.makedirs(f"/home/astro/shared/projects/bls_scraping_data_job/downloads/{url_name}", exist_ok=True)
